@@ -20,7 +20,7 @@ def load_data_in_es():
     data = r.json()
     print("Loading data in elasticsearch ...")
     for id, truck in enumerate(data):
-        res = es.index(index="sfdata", doc_type="truck", id=id, body=truck)
+        res = es.index(index="sfdata", id=id, document=truck)
     print("Total trucks loaded: ", len(data))
 
 def safe_check_index(index, retry=3):
@@ -42,11 +42,25 @@ def format_fooditems(string):
     return items[1:] if items[0].find("cold truck") > -1 else items
 
 def check_and_load_index():
-    """ checks if index exits and loads the data accordingly """
-    if not safe_check_index('sfdata'):
-        print("Index not found...")
-        load_data_in_es()
+    # Check if the index exists
+    if not es.indices.exists(index="sfdata"):
+        # If the index does not exist, create it
+        es.indices.create(index="sfdata")
+        print("Created index sfdata.")
+    
+    load_data_in_es()
 
+def load_data_in_es():
+    # Sample truck data
+    trucks = [
+        {"name": "Truck 1", "location": "Location 1", "cuisine": "Mexican"},
+        {"name": "Truck 2", "location": "Location 2", "cuisine": "Indian"}
+    ]
+    
+    for id, truck in enumerate(trucks):
+        # Indexing the truck data without doc_type
+        res = es.index(index="sfdata", id=id, document=truck)
+        print(f"Indexed truck with id {id}: {res['result']}")
 ###########
 ### APP ###
 ###########
