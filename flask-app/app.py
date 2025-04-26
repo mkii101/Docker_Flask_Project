@@ -2,11 +2,12 @@ from elasticsearch import Elasticsearch, exceptions
 import os
 import time
 from flask import Flask, jsonify, request, render_template
+from markupsafe import escape
 import sys
 import requests
 
-es = Elasticsearch(host='es')
-
+es_host = os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')  # Default to localhost:9200
+es = Elasticsearch([es_host])
 app = Flask(__name__)
 
 def load_data_in_es():
@@ -25,7 +26,8 @@ def safe_check_index(index, retry=3):
         print("Out of retries. Bailing out...")
         sys.exit(1)
     try:
-        status = es.indices.exists(index)
+        status = es.indices.exists(index=index)
+
         return status
     except exceptions.ConnectionError as e:
         print("Unable to connect to ES. Retrying in 5 secs...")

@@ -1,0 +1,35 @@
+---
+- name: Deploy Flask App with Docker
+  hosts: localhost
+  become: true
+
+  tasks:
+    - name: Refresh package cache
+      ansible.builtin.command: sudo apt-get update
+      
+    - name: Ensure Docker is installed
+      ansible.builtin.apt:
+        name: docker.io
+        state: present
+      when: ansible_os_family == "Debian"
+
+    - name: Start Docker service
+      ansible.builtin.apt:
+        name: docker
+        state: started
+        enabled: true
+
+    - name: Build the Docker image
+      community.docker.docker_image_build:
+        name: flask-app
+        path: flask-app
+        state: present
+
+    - name: Run the Docker container
+      community.docker.docker_container:
+        name: flask-app-container
+        image: flask-app
+        state: started
+        ports:
+          - "80:5000"
+        restart_policy: always
