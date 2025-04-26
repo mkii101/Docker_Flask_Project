@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Docker_Flask_Project
 =======
 SF Food Trucks
@@ -32,4 +31,3 @@ $ ./setup-aws-ecs.sh
 ```
 
 Learn more at [docker-curriculum](http://prakhar.me/docker-curriculum).
->>>>>>> master
