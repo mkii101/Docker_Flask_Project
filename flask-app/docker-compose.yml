@@ -8,10 +8,21 @@ services:
       - elasticsearch
     environment:
       - ELASTICSEARCH_HOST=http://elasticsearch:9200
+    networks:
+      - es-net
 
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.11.1
+    container_name: elasticsearch
     environment:
-      - discovery.type=single-node
+      - ELASTICSEARCH_HOST=https://my-elasticsearch-project-cd3ec1.es.us-east-1.aws.elastic.cloud:443
+      - ELASTICSEARCH_API_KEY=ZlZvaGNwWUJGYkgtYVdJeHN0dHI6andZSGRMZFNpbmNEdWpYbERxVzlSQQ==
     ports:
       - "9200:9200"
+      - "9300:9300"
+    networks:
+      - es-net
+
+networks:
+  es-net:
+    driver: bridge

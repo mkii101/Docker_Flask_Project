@@ -7,7 +7,10 @@ import sys
 import requests
 
 es_host = os.getenv('ELASTICSEARCH_HOST', 'http://localhost:9200')  # Default to localhost:9200
-es = Elasticsearch([es_host])
+es = Elasticsearch(
+    "https://my-elasticsearch-project-cd3ec1.es.us-east-1.aws.elastic.cloud:443",
+    api_key="ZlZvaGNwWUJGYkgtYVdJeHN0dHI6andZSGRMZFNpbmNEdWpYbERxVzlSQQ=="
+)
 app = Flask(__name__)
 
 def load_data_in_es():
